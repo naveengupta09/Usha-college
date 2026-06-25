@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useQuery } from '@tanstack/react-query'
-import { X, ZoomIn } from 'lucide-react'
+import { X, ZoomIn, Phone, Mail, MapPin, Clock, CheckCircle, Loader2, Send } from 'lucide-react'
 import PublicLayout from '@/app/_components/PublicLayout'
 import { publicApi } from '@/lib/api'
-import { GALLERY_CATEGORIES } from '@/data/constants'
+import { GALLERY_CATEGORIES, COLLEGE } from '@/data/constants'
 
 const PH = Array.from({length:12},(_,i)=>({_id:i,title:`Campus Photo ${i+1}`,category:GALLERY_CATEGORIES[i%GALLERY_CATEGORIES.length],image:null}))
 
@@ -14,6 +14,20 @@ export default function GalleryPage() {
   const [lightbox, setLightbox] = useState<any>(null)
   const { data } = useQuery({ queryKey:['gallery',cat], queryFn:()=>publicApi.getGallery({category:cat||undefined,limit:48}) })
   const images = data?.data?.data?.length ? data.data.data : PH
+
+  // form state
+  const [done, setDone] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [form, setForm] = useState({ name:'', phone:'', email:'', subject:'', message:'' })
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSending(true)
+    // TODO: replace with real API call
+    await new Promise(r => setTimeout(r, 1000))
+    setSending(false)
+    setDone(true)
+  }
 
   return (
     <PublicLayout>
@@ -74,53 +88,9 @@ export default function GalleryPage() {
           </motion.div>
         )}
       </AnimatePresence>
-    </PublicLayout>
-  )
-}
-
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Phone, Mail, MapPin, Clock, Send, CheckCircle, Loader2 } from 'lucide-react'
-import PublicLayout from '@/app/_components/PublicLayout'
-import { publicApi } from '@/lib/api'
-import { COLLEGE } from '@/data/constants'
-import { toast } from 'sonner'
-
-export default function ContactPage() {
-  const [form, setForm] = useState({name:'',email:'',phone:'',subject:'',message:''})
-  const [sending, setSending] = useState(false)
-  const [done, setDone] = useState(false)
-
-  const onSubmit = async(e:React.FormEvent) => {
-    e.preventDefault(); setSending(true)
-    try { await publicApi.submitContact(form); setDone(true); toast.success('Message sent!') }
-    catch { toast.error('Failed. Please try again.') }
-    finally { setSending(false) }
-  }
-
-  const F = ({k,l,t='text',required=false}:any) => (
-    <div>
-      <label className="block text-xs font-semibold text-gray-500 mb-1.5">{l}{required&&<span className="text-red-400 ml-0.5">*</span>}</label>
-      <input type={t} required={required} value={(form as any)[k]} onChange={e=>setForm(f=>({...f,[k]:e.target.value}))}
-        className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-uipe-navy/20 focus:border-uipe-navy transition-all bg-white"/>
-    </div>
-  )
-
-  return (
-    <PublicLayout>
-      <div className="bg-uipe-navy py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-hero-gradient opacity-80"/>
-        <div className="hero-particles absolute inset-0"/>
-        <div className="container-xl relative z-10">
-          <p className="text-uipe-gold text-xs font-semibold tracking-widest uppercase mb-3">Get In Touch</p>
-          <h1 className="font-heading text-5xl md:text-7xl font-bold text-white mb-4">Contact Us</h1>
-          <p className="text-white/55 text-lg max-w-xl">We're here to help with any queries about admissions, courses, or college life.</p>
-        </div>
-      </div>
 
       <section className="section-py bg-gray-50">
         <div className="container-xl grid lg:grid-cols-5 gap-10">
-          {/* Info */}
           <div className="lg:col-span-2 space-y-6">
             {[
               {Icon:Phone,title:'Call Us',val:COLLEGE.phone,sub:'Mon–Sat, 9am–5pm',href:`tel:${COLLEGE.phone}`},
@@ -142,7 +112,6 @@ export default function ContactPage() {
               </motion.a>
             ))}
 
-            {/* Map embed placeholder */}
             <div className="bg-uipe-navy rounded-2xl overflow-hidden h-48 relative">
               <div className="absolute inset-0 flex items-center justify-center flex-col gap-2">
                 <MapPin size={32} className="text-uipe-gold"/>
@@ -153,7 +122,6 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Form */}
           <motion.div initial={{opacity:0,x:24}} whileInView={{opacity:1,x:0}} viewport={{once:true}}
             className="lg:col-span-3 bg-white rounded-3xl border border-gray-100 shadow-navy p-8 md:p-10">
             {done ? (
@@ -171,10 +139,10 @@ export default function ContactPage() {
                 <p className="text-gray-400 text-sm mb-7">Fill in the form and our team will be in touch.</p>
                 <form onSubmit={onSubmit} className="space-y-5">
                   <div className="grid sm:grid-cols-2 gap-4">
-                    <F k="name" l="Full Name" required/>
-                    <F k="phone" l="Phone Number" t="tel"/>
+                    <input name="name" placeholder="Full Name" required value={form.name} onChange={e=>setForm(f=>({ ...f, name:e.target.value }))} className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-uipe-navy/20 focus:border-uipe-navy"/>
+                    <input name="phone" placeholder="Phone Number" type="tel" value={form.phone} onChange={e=>setForm(f=>({ ...f, phone:e.target.value }))} className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-uipe-navy/20 focus:border-uipe-navy"/>
                   </div>
-                  <F k="email" l="Email Address" t="email" required/>
+                  <input name="email" placeholder="Email Address" type="email" required value={form.email} onChange={e=>setForm(f=>({ ...f, email:e.target.value }))} className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-uipe-navy/20 focus:border-uipe-navy"/>
                   <div>
                     <label className="block text-xs font-semibold text-gray-500 mb-1.5">Subject<span className="text-red-400 ml-0.5">*</span></label>
                     <select required value={form.subject} onChange={e=>setForm(f=>({...f,subject:e.target.value}))}

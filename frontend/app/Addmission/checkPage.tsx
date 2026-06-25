@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Search, CheckCircle, Clock, XCircle, AlertCircle, ArrowLeft, FileText } from 'lucide-react'
 import Link from 'next/link'
-import PublicLayout from '@/components/layout/PublicLayout'
+import PublicLayout from '@/app/_components/PublicLayout'
 import { publicApi } from '@/lib/api'
 import { toast } from 'sonner'
 
