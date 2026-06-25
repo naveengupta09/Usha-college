@@ -1,0 +1,85 @@
+import type { Config } from 'tailwindcss'
+
+const config: Config = {
+  darkMode: ['class'],
+  content: ['./src/**/*.{ts,tsx,js,jsx}'],
+  theme: {
+    container: { center: true, padding: '1rem', screens: { '2xl': '1400px' } },
+    extend: {
+      colors: {
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary:     { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+        secondary:   { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+        destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+        muted:       { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+        accent:      { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+        popover:     { DEFAULT: 'hsl(var(--popover))', foreground: 'hsl(var(--popover-foreground))' },
+        card:        { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+        uipe: {
+          navy:      '#0D1B4B',
+          'navy-deep':'#080f2b',
+          'navy-light':'#1a2f6e',
+          gold:      '#C9A227',
+          'gold-light':'#E8C84A',
+          'gold-dark': '#A8861F',
+          sky:       '#1E88E5',
+          cream:     '#FDFCF8',
+          slate:     '#64748b',
+        },
+      },
+      fontFamily: {
+        sans:    ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        heading: ['"Playfair Display"', 'Georgia', '"Times New Roman"', 'serif'],
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+      backgroundImage: {
+        'hero-gradient': 'radial-gradient(ellipse at 20% 50%, #1a2f6e 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, #0D1B4B 0%, transparent 55%), #0D1B4B',
+        'gold-shine': 'linear-gradient(135deg, #A8861F 0%, #C9A227 40%, #E8C84A 70%, #C9A227 100%)',
+        'card-shine': 'linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 100%)',
+      },
+      boxShadow: {
+        'navy':    '0 4px 24px rgba(13,27,75,0.18)',
+        'navy-lg': '0 12px 48px rgba(13,27,75,0.24)',
+        'gold':    '0 4px 20px rgba(201,162,39,0.4)',
+        'card':    '0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.05)',
+        'card-hover': '0 4px 8px rgba(0,0,0,0.04), 0 16px 40px rgba(0,0,0,0.10)',
+      },
+      animation: {
+        'fade-up':    'fadeUp 0.6s cubic-bezier(0.22,1,0.36,1) both',
+        'fade-in':    'fadeIn 0.4s ease both',
+        'scale-in':   'scaleIn 0.3s ease both',
+        float:        'float 5s ease-in-out infinite',
+        shimmer:      'shimmer 2.5s infinite',
+        marquee:      'marquee 30s linear infinite',
+        'accordion-down': 'accordion-down 0.2s ease-out',
+        'accordion-up':   'accordion-up 0.2s ease-out',
+        'spin-slow':  'spin 3s linear infinite',
+        'pulse-ring': 'pulse-ring 2s ease infinite',
+        'gradient-x': 'gradient-x 4s ease infinite',
+      },
+      keyframes: {
+        fadeUp:    { from: { opacity:'0', transform:'translateY(20px)' }, to: { opacity:'1', transform:'translateY(0)' } },
+        fadeIn:    { from: { opacity:'0' }, to: { opacity:'1' } },
+        scaleIn:   { from: { opacity:'0', transform:'scale(0.95)' }, to: { opacity:'1', transform:'scale(1)' } },
+        float:     { '0%,100%': { transform:'translateY(0)' }, '50%': { transform:'translateY(-14px)' } },
+        shimmer:   { '0%': { backgroundPosition:'-200% 0' }, '100%': { backgroundPosition:'200% 0' } },
+        marquee:   { from: { transform:'translateX(0)' }, to: { transform:'translateX(-50%)' } },
+        'pulse-ring': { '0%': { transform:'scale(0.95)',opacity:'0.8' }, '70%': { transform:'scale(1.15)',opacity:'0' }, '100%': { transform:'scale(1.15)',opacity:'0' } },
+        'gradient-x': { '0%,100%': { backgroundPosition:'0% 50%' }, '50%': { backgroundPosition:'100% 50%' } },
+        'accordion-down': { from: { height:'0' }, to: { height:'var(--radix-accordion-content-height)' } },
+        'accordion-up':   { from: { height:'var(--radix-accordion-content-height)' }, to: { height:'0' } },
+      },
+    },
+  },
+  plugins: [require('tailwindcss-animate')],
+}
+
+export default config
